@@ -20,16 +20,16 @@ pipeline {
                 '''
             }
         }
-    }
-    stage('Test w/ Docker'){
-        steps{
-            sh '''
-            echo "Starting test stage"
-            touch test_checking_htmlfile.txt
-            ls -la build >> test_checking_htmlfile.txt
-            grep "index.html" test_checking_htmlfile.txt || echo "Test Failed: File not found"
-            npm test
-            '''
+        stage('Test w/ Docker'){
+            steps{
+                sh '''
+                echo "Starting test stage"
+                touch test_checking_htmlfile.txt
+                ls -la build >> test_checking_htmlfile.txt
+                grep "index.html" test_checking_htmlfile.txt || echo "Test Failed: File not found"
+                npm test
+                '''
+            }
         }
     }
 }
