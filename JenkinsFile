@@ -26,8 +26,8 @@ pipeline {
             sh '''
             echo "Starting test stage"
             touch test_checking_htmlfile.txt
-            ls -la >> test_checking_htmlfile.txt
-            grep "index.html" build/test_checking_htmlfile.txt
+            ls -la build >> test_checking_htmlfile.txt
+            grep "index.html" test_checking_htmlfile.txt
             '''
             npm test
         }
