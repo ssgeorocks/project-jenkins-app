@@ -12,22 +12,27 @@ pipeline {
             steps {
                 sh '''
                 ls -la
-                node --version
-                npm --version
-                npm ci
-                npm run build
-                ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
                 '''
             }
         }
         stage('Test w/ Docker'){
+            agent{
+                docker{
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
             steps{
                 sh '''
-                echo "Starting test stage"
-                touch test_checking_htmlfile.txt
-                ls -la build >> test_checking_htmlfile.txt
-                grep "index.html" test_checking_htmlfile.txt || echo "Test Failed: File not found"
-                npm test
+                    echo "Starting test stage"
+                    touch test_checking_htmlfile.txt
+                    ls -la build >> test_checking_htmlfile.txt
+                    grep "index.html" test_checking_htmlfile.txt || echo "Test Failed: File not found"
+                    npm test
                 '''
             }
         }
