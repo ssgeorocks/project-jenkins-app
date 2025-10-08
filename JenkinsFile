@@ -87,14 +87,12 @@ pipeline {
                 docker{
                     image 'node:18-alpine'
                     reuseNode true
+                    args '-u 0:0'   // ejecuta como root
                 }
             }
             steps {
                 sh '''
-                su root -c "
                 apk add --no-cache bash curl git
-                npm install netlify-cli
-                "
                 npm install netlify-cli
                 node_modules/.bin/netlify --version
                 echo "Deplyoing to production. Site ID NETLIFY_SITE_ID"
