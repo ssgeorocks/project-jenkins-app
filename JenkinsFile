@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment{
+        NETLIFY_SITE_ID = '0047a380-8c98-4bf5-9552-2d7552d07518'
+    }
+
     stages {
         ///* 
         //This is a comment in Jenkins.
@@ -88,6 +92,7 @@ pipeline {
                 sh '''
                 npm install netlify-cli@20.1.1
                 node_modules/.bin/netlify --version
+                echo "Deplyoing to production. Site ID 0047a380-8c98-4bf5-9552-2d7552d07518"
                 '''
             }
         }       
