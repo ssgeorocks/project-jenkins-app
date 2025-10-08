@@ -23,40 +23,46 @@ pipeline {
             }
         }
                 */
-        stage('Test w/ Docker'){
-            agent{
-                docker{
-                    image 'node:18-alpine'
-                    reuseNode true
+        
+        stage('Run Tests'){
+            parallel{
+                stage('Unit Tests w/ Docker'){
+                    agent{
+                        docker{
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+                    steps{
+                        sh '''
+                            echo "Starting test stage"
+                            touch test_checking_htmlfile.txt
+                            ls -la build >> test_checking_htmlfile.txt
+                            grep "index.html" test_checking_htmlfile.txt || echo "Test Failed: File not found"
+                            npm test
+                        '''
+                    }
                 }
-            }
-            steps{
-                sh '''
-                    echo "Starting test stage"
-                    touch test_checking_htmlfile.txt
-                    ls -la build >> test_checking_htmlfile.txt
-                    grep "index.html" test_checking_htmlfile.txt || echo "Test Failed: File not found"
-                    npm test
-                '''
+
+                stage('E2E w/ Docker'){
+                    agent{
+                        docker{
+                            image 'mcr.microsoft.com/playwright:v1.55.0-noble'
+                            reuseNode true
+                        }
+                    }
+                    steps{
+                        sh '''
+                            npm install serve
+                            node_modules/.bin/serve -s build &
+                            sleep 10
+                            npx playwright test --reporter=html
+                        '''
+                    }
+                }  
             }
         }
-
-        stage('E2E w/ Docker'){
-            agent{
-                docker{
-                    image 'mcr.microsoft.com/playwright:v1.55.0-noble'
-                    reuseNode true
-                }
-            }
-            steps{
-                sh '''
-                    npm install serve
-                    node_modules/.bin/serve -s build &
-                    sleep 10
-                    npx playwright test --reporter=html
-                '''
-            }
-        }        
+               
     }
     post {
         always {
