@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     stages {
-        /* 
-        This is a comment in Jenkins.
+        ///* 
+        //This is a comment in Jenkins.
         stage('Build w/ Docker') {
             agent{
                 docker{
@@ -22,7 +22,7 @@ pipeline {
                 '''
             }
         }
-                */
+        //        */
         
         stage('Run Tests'){
             parallel{
@@ -76,6 +76,20 @@ pipeline {
                 }  
             }
         }
-               
+          
+        stage('Deploy') {
+            agent{
+                docker{
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                npm install netlify-cli 
+                node_modules/.bin/netlify --version
+                '''
+            }
+        }       
     }
 }
