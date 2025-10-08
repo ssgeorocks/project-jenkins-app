@@ -91,6 +91,10 @@ pipeline {
             }
             steps {
                 sh '''
+                su root -c "
+                apk add --no-cache bash curl git
+                npm install netlify-cli
+                "
                 npm install netlify-cli
                 node_modules/.bin/netlify --version
                 echo "Deplyoing to production. Site ID NETLIFY_SITE_ID"
