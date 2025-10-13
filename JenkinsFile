@@ -100,7 +100,7 @@ pipeline {
                 echo "Deplyoing to production. Site ID NETLIFY_SITE_ID"
                 node_modules/.bin/netlify status
                 node_modules/.bin/netlify deploy --dir=build --prod 
-                cho "Site ID NETLIFY_SITE_ID deployed"
+                echo "Site ID NETLIFY_SITE_ID deployed"
                 '''
             }
         }
